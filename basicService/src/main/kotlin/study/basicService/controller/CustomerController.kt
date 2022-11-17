@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import study.basicService.common.exception.CustomerNotFoundException
+import study.basicService.common.exception.ErrorResponse
 import study.basicService.model.Customer
 import study.basicService.service.CustomerService
 
@@ -20,13 +22,20 @@ class CustomerController {
     private lateinit var customerService: CustomerService
 
     /** ResponseEntity를 통해 상태코드 지정하기 */
-    @GetMapping("/customer")
-    fun getCustomer(@PathVariable id: Long) : ResponseEntity<Customer?> {
+    @GetMapping("/customer/{id}")
+    fun getCustomer(@PathVariable id: Long): ResponseEntity<Any> {
         val customer = customerService.getCustomer(id)
-        // 찾지 못했을 때 404, 조회 성공 시 200 내려주기
-        val status = if (customer == null) HttpStatus.NOT_FOUND else HttpStatus.OK
 
-        return ResponseEntity(customer, status)
+        // 고객에 대한 정보를 찾지 못했을 때 Exception 발생시키기.
+        return if (customer != null)
+            ResponseEntity(customer, HttpStatus.OK)
+        else
+            ResponseEntity(ErrorResponse("Customer Not Found!", "customer '$id' is not found"),
+                HttpStatus.NOT_FOUND)
+
+        // 찾지 못했을 때 404, 조회 성공 시 200 내려주기
+//        val status = if (customer == null) HttpStatus.NOT_FOUND else HttpStatus.OK
+//        return ResponseEntity(customer, status)
     }
 
     /** Unit type = 일종의 void 같은 역할이다. */
