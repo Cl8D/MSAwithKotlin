@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentHashMap
 class CustomerApplication {
     companion object {
         val initialCustomers = arrayOf(
-                Customer(1, "Hello1"),
-                Customer(2, "Hello2"),
-                Customer(3, "Hello3"))
+                Customer(1, "Hello1", Customer.Telephone("+010", "12345678")),
+                Customer(2, "Hello2", Customer.Telephone("+011", "12345678")),
+                Customer(3, "Hello3",  Customer.Telephone("+012", "12345678")))
     }
 
     @Bean

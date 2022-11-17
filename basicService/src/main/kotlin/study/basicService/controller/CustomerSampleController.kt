@@ -20,7 +20,8 @@ class CustomerSampleController {
     fun getSample() = "Hello I'm Sample Controller"
 
     @GetMapping("/sample-customer")
-    fun getSampleCustomer() = Customer(1, "Hello")
+    fun getSampleCustomer() = Customer(1, "Hello",
+            Customer.Telephone("+010", "12345678"))
 
     // lateinit를 붙여주면 변수 초기화를 미룰 수 있다.
     // 생성자 다음에 초기화를 하는 것과 동일하다.

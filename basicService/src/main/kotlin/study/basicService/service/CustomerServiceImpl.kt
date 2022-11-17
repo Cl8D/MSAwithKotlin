@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentHashMap
 class CustomerServiceImpl : CustomerService {
     companion object {
         val initialCustomers = arrayOf(
-                Customer(1, "Hello1"),
+                Customer(1, "Hello1", Customer.Telephone("+010", "12345678")),
                 Customer(2, "Hello2"),
-                Customer(3, "Hello3"))
+                Customer(3, "Hello3",  Customer.Telephone("+012", "12345678")))
     }
 
     // 서로 다른 요청이 맵의 동일한 요소에 액세스 시 동기화 문제가 발생할 수 있기 때문에 concurrentHashMap 사용
