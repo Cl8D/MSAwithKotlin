@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Mono
 import study.reactiveservice.domain.Customer
 import study.reactiveservice.service.CustomerService
 
@@ -23,6 +24,13 @@ class CustomerController {
         val customer = customerService.getCustomer(id)
         return ResponseEntity(customer, HttpStatus.OK)
     }
+
+    @GetMapping("/reactive/{id}")
+    fun getCustomerByR(@PathVariable id: Long) : ResponseEntity<Mono<Customer>> {
+        val customer = customerService.getCustomerByR(id)
+        return ResponseEntity(customer, HttpStatus.OK)
+    }
+
 
     // http://localhost:8080/customer/search?nameFilter=micro
     @GetMapping("/search")

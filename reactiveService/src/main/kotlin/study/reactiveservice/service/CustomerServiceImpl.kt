@@ -1,6 +1,10 @@
 package study.reactiveservice.service
 
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toFlux
+import reactor.kotlin.core.publisher.toMono
 import study.reactiveservice.domain.Customer
 import study.reactiveservice.domain.Customer.*
 import java.util.concurrent.ConcurrentHashMap
@@ -26,4 +30,16 @@ class CustomerServiceImpl : CustomerService {
             customers.filter {
                 it.value.name.contains(nameFilter, true)
             }.map(Map.Entry<Long, Customer>::value).toList()
+
+
+    // 여기서는 코틀린의 타입 추론 기능을 위해서 .toMono를 사용하였다.
+    // Mono<Customer> = Customer(1, "Mono").toMono와 동일한 의미이다.
+    // 조금 더 풀어쓰면, Mono<Customer> = Mono.just(Customer(1, "Mono")와 동일한 의미이다.
+    override fun getCustomerByR(id: Long): Mono<Customer>? =
+            customers[id]?.toMono()
+
+    override fun searchCustomerByR(nameFilter: String): Flux<Customer> =
+            customers.filter {
+                it.value.name.contains(nameFilter, true)
+            }.map(Map.Entry<Long, Customer>::value).toFlux()
 }
