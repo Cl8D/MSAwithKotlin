@@ -1,0 +1,11 @@
+POST localhost:8080/customer/reactive
+Content-Type: application/json
+
+{
+  "id": 4,
+  "name": "reactiveKotlin",
+  "telephone" : {
+    "countryCode" : "+010",
+    "telephoneNumber" : "12345678"
+  }
+}
