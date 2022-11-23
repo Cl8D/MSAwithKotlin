@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.kotlin.core.publisher.toMono
 import study.reactiveservice.domain.Customer
+import study.reactiveservice.handler.dto.ErrorResponse
 import study.reactiveservice.service.CustomerService
 import java.net.URI
 
@@ -81,5 +82,14 @@ class CustomerHandler(private val customerService: CustomerService) {
                             ServerResponse.created(
                                     URI.create("/functional/customer/{it.id}"))
                                     .build()
+                    }
+                    // 오류가 발생했을 때 처리.
+                    .onErrorResume(Exception::class.java) {
+                        ServerResponse.badRequest().body(
+                                BodyInserters.fromValue(
+                                        ErrorResponse("Customer Create Exception!",
+                                        it.message ?: "error")
+                                )
+                        )
                     }
 }
