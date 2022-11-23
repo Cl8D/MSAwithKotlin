@@ -27,5 +27,5 @@ interface CustomerService {
      * 객체에 대해 리액티브하게 수신하기.
      */
     // 스프링에게 리액티브하게 객체를 가져온다는 것을 알려주기 위해서 선언한다고 생각할 수 있다.
-    fun createCustomerByR(customerMono: Mono<Customer>) : Mono<*>
+    fun createCustomerByR(customerMono: Mono<Customer>) : Mono<Customer>
 }

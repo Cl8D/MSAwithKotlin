@@ -45,7 +45,7 @@ class CustomerServiceImpl : CustomerService {
             }.map(Map.Entry<Long, Customer>::value).toFlux()
 
 
-    override fun createCustomerByR(customerMono: Mono<Customer>): Mono<*> {
+    override fun createCustomerByR(customerMono: Mono<Customer>): Mono<Customer> {
          /*
              subscribe 메서드는 disposable 객체를 반환한다.
              그래서 이런 식으로 작성하게 되면 결과로 다음과 같이 반환한다.
