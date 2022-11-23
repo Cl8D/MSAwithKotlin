@@ -31,4 +31,15 @@ Content-Type: application/json
 GET localhost:8080/functional/customers/
 
 ###
+# 예외 핸들링
+POST localhost:8080/functional/customer/
+Content-Type: application/json
 
+{
+  "id": 4
+  "name": "reactiveKotlin",
+  "telephone" : {
+    "countryCode" : "+010",
+    "telephoneNumber" : "12345678"
+  }
+}
