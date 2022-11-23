@@ -14,7 +14,7 @@ interface CustomerService {
     /** 모노 사용 */
     // 여기서 Mono<>는 실제 인스턴스가 아니라, 앞으로 우리가 얻으려고 하는 것에 대한 일종의 '약속'으로 동작한다.
     // 즉, Mono<>로 선언하면, 이 publisher는 앞으로 Customer를 게시할 것을 약속하게 된다.
-    fun getCustomerByR(id: Long) : Mono<Customer>?
+    fun getCustomerByR(id: Long) : Mono<Customer>
 
     /** 플럭스 사용 */
     // flux를 통해 0~무한대의 요소를 가진 publisher를 만들 수 있다.

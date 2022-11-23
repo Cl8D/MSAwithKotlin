@@ -17,7 +17,7 @@ class CustomerRouter(private val customerHandler: CustomerHandler) {
      * 마이크로서비스로 들어오는 요청을 어떻게 처리할지 정의하기 위해 RouterFunction 정의.
      */
     @Bean
-    fun customerRoutes() : RouterFunction<*> = router {
+    fun tempCustomerRoutes() : RouterFunction<*> = router {
         // /functional으로 들어온 모든 요청을 처리하게 된다.
         "/functional".nest {
             // 한 단계 더 들어가서, /functional/customer/로 들어온 요청에 대해서 'Hello world'를 응답하게 된다.
@@ -36,6 +36,7 @@ class CustomerRouter(private val customerHandler: CustomerHandler) {
         }
     }
 
+    @Bean
     fun customerRoutesVer2() : RouterFunction<*> = router {
         "/functional".nest {
             "/customer".nest {
@@ -50,22 +51,34 @@ class CustomerRouter(private val customerHandler: CustomerHandler) {
     }
 
     /** ver2를 handler와 router 구조로 분해하여 표현한 것이다. */
-
+    @Bean
     fun customerRouterVer3() : RouterFunction<*> = router {
         "/functional".nest {
             "/customer".nest {
                 GET("/ver3") {
-                    it : ServerRequest -> customerHandler.get(it)
+                    it : ServerRequest -> customerHandler.tempGet(it)
                 }
             }
         }
     }
 
     /** ver3을 람다식을 활용하여 줄인 버전이다. */
+    @Bean
     fun customerRouterVer4() : RouterFunction<*> = router {
         "/functional".nest {
             "/customer".nest {
-                GET("/ver4", customerHandler::get)
+                GET("/ver4", customerHandler::tempGet)
+            }
+        }
+    }
+
+
+    /** REST API에 적용하기. */
+    @Bean
+    fun customerRoutes() : RouterFunction<*> = router {
+        "/functional".nest {
+            "/customer".nest {
+                GET("/{id}", customerHandler::getCustomer)
             }
         }
     }
