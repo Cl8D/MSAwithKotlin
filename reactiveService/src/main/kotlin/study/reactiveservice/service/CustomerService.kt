@@ -22,4 +22,10 @@ interface CustomerService {
     // 기본형으로는 Flux.fromIterable(listOf(Customer(1, "Hi"), Customer(2, "Kotlin")))와 같이 선언할 수 있다.
     // 조금 코틀린에서는 축악하여 listOf(Customer(1, "Hi"), Customer(2, "Kotlin")).toFlux()를 활용할 수 있다.
     fun searchCustomerByR(nameFilter: String) : Flux<Customer>
+
+    /**
+     * 객체에 대해 리액티브하게 수신하기.
+     */
+    // 스프링에게 리액티브하게 객체를 가져온다는 것을 알려주기 위해서 선언한다고 생각할 수 있다.
+    fun createCustomerByR(customerMono: Mono<Customer>) : Mono<*>
 }

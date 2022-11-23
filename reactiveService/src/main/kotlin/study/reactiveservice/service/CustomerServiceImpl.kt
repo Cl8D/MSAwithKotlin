@@ -42,4 +42,27 @@ class CustomerServiceImpl : CustomerService {
             customers.filter {
                 it.value.name.contains(nameFilter, true)
             }.map(Map.Entry<Long, Customer>::value).toFlux()
+
+
+    override fun createCustomerByR(customerMono: Mono<Customer>): Mono<*> {
+         /*
+             subscribe 메서드는 disposable 객체를 반환한다.
+             그래서 이런 식으로 작성하게 되면 결과로 다음과 같이 반환한다.
+             {
+              "disposed": false,
+              "scanAvailable": true
+            }
+        */
+//        return customerMono.subscribe {
+//            customers[it.id] = it
+//        }.toMono()
+
+        // 이런 식으로 바딕값으로 들어왔던 값을 명시적으로 반환하도록 할 수 있다.
+        return customerMono.map {
+            customers[it.id] = it
+            it// 물론, 여기에 it이 아니라 Mono.empty<Any>()를 활용하면 빈 객체를 반환한다.
+        }
+
+    }
+
 }
