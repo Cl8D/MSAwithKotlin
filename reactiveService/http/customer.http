@@ -1,3 +1,4 @@
+# 일반 컨트롤러 요청 사용
 POST localhost:8080/customer/reactive
 Content-Type: application/json
 
@@ -9,3 +10,25 @@ Content-Type: application/json
     "telephoneNumber" : "12345678"
   }
 }
+
+###
+
+# 라우터를 활용한 요청 사용
+POST localhost:8080/functional/customer/
+Content-Type: application/json
+
+{
+  "id": 4,
+  "name": "reactiveKotlin",
+  "telephone" : {
+    "countryCode" : "+010",
+    "telephoneNumber" : "12345678"
+  }
+}
+
+###
+# 정보 조회
+GET localhost:8080/functional/customers/
+
+###
+
