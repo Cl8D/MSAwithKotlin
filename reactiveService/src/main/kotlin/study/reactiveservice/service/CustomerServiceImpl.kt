@@ -7,6 +7,7 @@ import reactor.kotlin.core.publisher.toFlux
 import reactor.kotlin.core.publisher.toMono
 import study.reactiveservice.domain.Customer
 import study.reactiveservice.domain.Customer.*
+import study.reactiveservice.handler.exception.CustomerExistException
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
@@ -59,11 +60,14 @@ class CustomerServiceImpl : CustomerService {
 //        }.toMono()
 
         // 이런 식으로 바딕값으로 들어왔던 값을 명시적으로 반환하도록 할 수 있다.
-        return customerMono.map {
-            customers[it.id] = it
-            it// 물론, 여기에 it이 아니라 Mono.empty<Any>()를 활용하면 빈 객체를 반환한다.
+        return customerMono.flatMap {
+            if (customers[it.id] == null) {
+                customers[it.id] = it
+                it.toMono() // 물론, 여기에 it이 아니라 Mono.empty<Any>()를 활용하면 빈 객체를 반환한다.
+            } else {
+                // 중복된 고객에 대해 체크하면서 생성하는 로직 추가.
+                Mono.error(CustomerExistException("Customer ${it.id} already exists!"))
+            }
         }
-
     }
-
 }
