@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.kotlin.core.publisher.toMono
 import study.reactiveservice.domain.Customer
 import study.reactiveservice.service.CustomerService
+import java.net.URI
 
 @Component
 class CustomerHandler(private val customerService: CustomerService) {
@@ -15,7 +17,7 @@ class CustomerHandler(private val customerService: CustomerService) {
     // Handler - Router 구조로 분해하여 표현하기.
     fun tempGet(serverRequest: ServerRequest) =
             ServerResponse.ok().body(Customer(1, "Handler-Router").toMono(),
-                Customer::class.java)
+                    Customer::class.java)
 
 
     // 기존에는 Mono<Customer>?를 반환하도록 하였으나, nullable의 경우 Customer::class.java에 바인딩이 불가능하기 때문에
@@ -51,4 +53,33 @@ class CustomerHandler(private val customerService: CustomerService) {
 //                    .switchIfEmpty(ServerResponse.notFound().build())
                     // 같은 내용이지만 이런 식으로 status() 메서드를 활용할 수도 있다.
                     .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_FOUND).build())
+
+
+    /** 검색을 위한 핸들러 추가. */
+    fun searchCustomerByMono(serverRequest: ServerRequest) =
+            ServerResponse.ok().body(
+                    customerService.searchCustomerByR(
+                            // 쿼리 파라미터 처리는 다음과 같이 진행할 수 있다.
+                            serverRequest.queryParam("nameFilter")
+                                    // 파라미터 값이 비어있을 때도 검색을 진행해야 되기 때문에 (전체 리스트 반환) 빈값으로 처리해준다.
+                                    .orElse("")), Customer::class.java)
+
+
+    /** 생성을 위한 핸들러 추가. */
+    fun createCustomerByMono(serverRequest: ServerRequest) =
+            customerService.createCustomerByR(
+                    // bodyToMono를 활용하여 body로 넘어온 값을 mono로 만들 수 있다.
+                    serverRequest.bodyToMono())
+                    // flatMap을 통해 response를 mono로 만들어준다. 생성된 Customer를 response로 넘겨준다.
+                    .flatMap {
+//                        ServerResponse.status(HttpStatus.CREATED)
+//                                .body(BodyInserters.fromValue(it))
+
+                        // 마찬가지로 status() 대신에 created() 같은 메서드를 사용할 수는 있다.
+                        // 단, 사용하려면 리소스의 URI가 필요하다.
+                        // 이렇게 {it.id}를 활용하여 이전의 리소스 id를 함께 넘겨준다.
+                            ServerResponse.created(
+                                    URI.create("/functional/customer/{it.id}"))
+                                    .build()
+                    }
 }

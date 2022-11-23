@@ -78,7 +78,11 @@ class CustomerRouter(private val customerHandler: CustomerHandler) {
     fun customerRoutes() : RouterFunction<*> = router {
         "/functional".nest {
             "/customer".nest {
-                GET("/{id}", customerHandler::getCustomer)
+                GET("/{id}", customerHandler::getCustomerByMono)
+                POST("/", customerHandler::createCustomerByMono)
+            }
+            "/customers".nest {
+                GET("/", customerHandler::searchCustomerByMono)
             }
         }
     }
